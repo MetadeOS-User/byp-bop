@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Bip & Bop</title>
+<style>
+  body {
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 30px;
+  }
+  button {
+    font-size: 28px;
+    padding: 20px 50px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<button onclick="pip()">bip</button>
+<button onclick="po()">bop</button>
+
+<script>
+const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+function play(freq, dur) {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = "sine";           // som totalmente redondo
+  osc.frequency.value = freq;
+
+  gain.gain.setValueAtTime(0.2, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(
+    0.0001,
+    ctx.currentTime + dur
+  );
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+  osc.stop(ctx.currentTime + dur);
+}
+
+// "píp" — agudo, curtíssimo
+function pip() {
+  play(1300, 0.055);
+}
+
+// "pó" — grave, redondo
+function po() {
+  play(360, 0.18);
+}
+</script>
+
+</body>
+</html>
